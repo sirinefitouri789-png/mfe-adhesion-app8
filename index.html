@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Application d’adhésion – Mutuelle Fonction Publique</title>
+<style>
+    body{font-family:'Segoe UI', Arial, sans-serif;background:linear-gradient(135deg,#0a3d62,#1e90ff);margin:0;padding:20px;}
+    .app{max-width:900px;background:#fff;margin:auto;border-radius:16px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.2);}
+    h1{color:#0a3d62;text-align:center;margin-bottom:10px;}
+    .subtitle{text-align:center;color:#555;margin-bottom:30px;}
+    label{font-weight:600;margin-top:15px;display:block;}
+    input, select{width:100%;padding:12px;margin-top:6px;border-radius:10px;border:1px solid #ccc;}
+    .packs{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px;}
+    .pack{border:2px solid #e6e6e6;border-radius:14px;padding:20px;background:#f8fbff;transition:0.3s;}
+    .pack:hover{border-color:#1e90ff;transform:translateY(-4px);}
+    .price{font-size:22px;font-weight:bold;color:#0a3d62;margin:10px 0;}
+    ul{padding-left:20px;color:#444;}
+    .submit{margin-top:40px;width:100%;padding:16px;font-size:18px;border:none;border-radius:12px;background:#1e90ff;color:#fff;cursor:pointer;}
+    .submit:hover{background:#0a3d62;}
+    .footer{text-align:center;margin-top:25px;font-size:13px;color:#777;}
+</style>
+</head>
+<body>
+
+<div class="app">
+    <h1>Demande d’adhésion – MFE</h1>
+    <p class="subtitle">Application digitale – BIRD Assurance<br>Réservée aux fonctionnaires de l’État</p>
+
+    <h2>1. Informations personnelles</h2>
+    <label>Nom et Prénom</label>
+    <input type="text" id="nom" placeholder="Votre nom complet">
+
+    <label>Administration / Ministère</label>
+    <input type="text" id="admin" placeholder="Ex : Ministère de l’Éducation">
+
+    <label>Téléphone</label>
+    <input type="tel" id="tel" placeholder="Ex : 98 000 000">
+
+    <label>Email</label>
+    <input type="email" id="email" placeholder="exemple@email.com">
+
+    <h2>2. Choix du Pack d’Assurance</h2>
+    <div class="packs">
+        <div class="pack">
+            <input type="radio" name="pack" value="Pack Essentiel / Confort"> 
+            <h3>Pack Essentiel / Confort</h3>
+            <p class="price">25 TND / mois</p>
+            <ul>
+                <li>Santé groupe – Option 1</li>
+                <li>Automobile – Responsabilité civile</li>
+                <li>Prévoyance – Décès de base / MRH essentielle</li>
+            </ul>
+        </div>
+        <div class="pack">
+            <input type="radio" name="pack" value="Pack Premium"> 
+            <h3>Pack Premium</h3>
+            <p class="price">50 TND / mois</p>
+            <ul>
+                <li>Santé complète – Option 2 + tiers payant</li>
+                <li>Automobile – Tous risques + facilités de paiement</li>
+                <li>Prévoyance – MRH étendue + garanties complémentaires</li>
+            </ul>
+        </div>
+    </div>
+
+    <button class="submit" id="submitBtn">Soumettre la demande</button>
+
+    <div class="footer">
+        © 2026 – BIRD Assurance | Projet Mutuelle des Fonctionnaires de l’État
+    </div>
+</div>
+
+<script>
+document.getElementById("submitBtn").addEventListener("click", function() {
+    const nom = document.getElementById("nom").value.trim();
+    const admin = document.getElementById("admin").value.trim();
+    const tel = document.getElementById("tel").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const pack = document.querySelector('input[name="pack"]:checked') ? document.querySelector('input[name="pack"]:checked').value : "";
+
+    if(!nom || !admin || !tel || !email || !pack){
+        alert("Veuillez remplir tous les champs !");
+        return;
+    }
+
+    const data = new FormData();
+    data.append("entry.2063580605", nom);   // Nom
+    data.append("entry.583349891", admin);  // Administration
+    data.append("entry.1522534827", tel);   // Téléphone
+    data.append("entry.484565376", email);  // Email
+    data.append("entry.1997909892", pack);  // Pack choisi
+
+    fetch("https://docs.google.com/forms/d/e/1FAIpQLScU0grw5GdkQr_RkZnB8cu9xI-VCtYDGIX83kIhYyuE3_k5qA/formResponse", {
+        method: "POST",
+        mode: "no-cors",
+        body: data
+    });
+
+    alert("Votre demande a été envoyée avec succès !");
+
+    // Réinitialiser le formulaire
+    document.getElementById("nom").value = "";
+    document.getElementById("admin").value = "";
+    document.getElementById("tel").value = "";
+    document.getElementById("email").value = "";
+    document.querySelectorAll('input[name="pack"]').forEach(input => input.checked = false);
+});
+</script>
+
+</body>
+</html>
